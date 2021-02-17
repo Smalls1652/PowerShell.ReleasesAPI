@@ -27,9 +27,11 @@ function Invoke-PwshReleaseParseAssetItem {
                 }
 
                 Default {
+                    $platformEnriched = Get-PwshReleaseKnownPlatformType -PlatformString $assetNameMatch.Groups['platform'].Value
+
                     $assetItem = [PwshReleaseAssetItem]@{
                         "Name"         = $asset.name;
-                        "Platform"     = $assetNameMatch.Groups['platform'].Value;
+                        "Platform"     = $platformEnriched;
                         "Architecture" = $assetNameMatch.Groups['arch'].Value;
                         "FileType"     = $assetNameMatch.Groups['fileType'].Value;
                         "SHA256"       = $assetFileHash;
