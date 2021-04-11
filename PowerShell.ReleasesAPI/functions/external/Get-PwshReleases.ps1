@@ -6,7 +6,7 @@ function Get-PwshReleases {
             {
                 $releaseVersionTest = [System.Text.RegularExpressions.Regex]::new("^(\d{1,}\.\d{1,})$").Match($PSItem)
                 if (($releaseVersionTest.Success -eq $false) -and ($null -ne $PSItem)) {
-                    throw "The provided input is in the incorrect format. An example of an acceptable input is 7.1."
+                    throw "The provided input is in the incorrect format. An example of an acceptable input is '7.1'."
                 }
                 else {
                     $true
@@ -14,8 +14,6 @@ function Get-PwshReleases {
             }
         )]
         [string]$FilterReleaseVersion,
-        [Parameter(Position = 0, ParameterSetName = "FilterByReleaseTag")]
-        [string]$FilterReleaseTag,
         [Parameter(Position = 1, ParameterSetName = "FilterByReleaseVersion")]
         [Parameter(Position = 1, ParameterSetName = "FilterByReleaseTag")]
         [switch]$NoPreReleases,
