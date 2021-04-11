@@ -1,7 +1,7 @@
 function Get-PwshReleases {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "FilterByReleaseVersion")]
     param(
-        [Parameter(Position = 0)]
+        [Parameter(Position = 0, ParameterSetName = "FilterByReleaseVersion")]
         [ValidateScript(
             {
                 $releaseVersionTest = [System.Text.RegularExpressions.Regex]::new("^(\d{1,}\.\d{1,})$").Match($PSItem)
@@ -14,8 +14,20 @@ function Get-PwshReleases {
             }
         )]
         [string]$FilterReleaseVersion,
-        [Parameter(Position = 1)]
-        [switch]$NoPreReleases
+        [Parameter(Position = 0, ParameterSetName = "FilterByReleaseTag")]
+        [string]$FilterReleaseTag,
+        [Parameter(Position = 1, ParameterSetName = "FilterByReleaseVersion")]
+        [Parameter(Position = 1, ParameterSetName = "FilterByReleaseTag")]
+        [switch]$NoPreReleases,
+        [Parameter(Position = 2, ParameterSetName = "FilterByReleaseVersion")]
+        [Parameter(Position = 2, ParameterSetName = "FilterByReleaseTag")]
+        [string]$FilterAssetsByPlatform,
+        [Parameter(Position = 3, ParameterSetName = "FilterByReleaseVersion")]
+        [Parameter(Position = 3, ParameterSetName = "FilterByReleaseTag")]
+        [string]$FilterAssetsByArchitecture,
+        [Parameter(Position = 4, ParameterSetName = "FilterByReleaseVersion")]
+        [Parameter(Position = 4, ParameterSetName = "FilterByReleaseTag")]
+        [string]$FilterAssetsByFileType
     )
 
     $releases = [System.Collections.Generic.List[PwshReleaseItem]]::new()
@@ -59,6 +71,27 @@ function Get-PwshReleases {
                 )
             }
             $assetList = Invoke-PwshReleaseParseAssetItem -Assets $releaseItem.assets -FileHashes $fileHashes
+
+            switch ([string]::IsNullOrEmpty($FilterAssetsByPlatform)) {
+                $false {
+                    $assetList = [PwshReleaseAssetItem[]]($assetList | FilterAssetPlatforms -Platform $FilterAssetsByPlatform)
+                    break
+                }
+            }
+
+            switch ([string]::IsNullOrEmpty($FilterAssetsByArchitecture)) {
+                $false {
+                    $assetList = [PwshReleaseAssetItem[]]($assetList | FilterAssetArchitectures -Architecture $FilterAssetsByArchitecture)
+                    break
+                }
+            }
+
+            switch ([string]::IsNullOrEmpty($FilterAssetsByFileType)) {
+                $false {
+                    $assetList = [PwshReleaseAssetItem[]]($assetList | FilterAssetFileTypes -FileType $FilterAssetsByFileType)
+                    break
+                }
+            }
 
             $releases.Add(
                 [PwshReleaseItem]@{
