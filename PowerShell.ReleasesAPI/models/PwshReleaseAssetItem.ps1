@@ -42,4 +42,8 @@ class PwshReleaseAssetItem {
 
         return $downloadedItem
     }
+
+    [string] ToString() {
+        return "$($this.Platform) $($this.Architecture) [$($this.FileType)]"
+    }
 }
