@@ -98,9 +98,9 @@ PrivateData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = @(
-            "PowerShell GitHub Repo",
-            "PowerShell Core Releases API",
-            "PowerShell Releases API"
+            "PowerShell-GitHub-Repo",
+            "PowerShell-Core-Releases-API",
+            "PowerShell-Releases-API"
         )
 
         # A URL to the license for this module.
