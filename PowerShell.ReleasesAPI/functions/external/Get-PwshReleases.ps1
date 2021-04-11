@@ -1,7 +1,7 @@
 function Get-PwshReleases {
-    [CmdletBinding(DefaultParameterSetName = "FilterByReleaseVersion")]
+    [CmdletBinding()]
     param(
-        [Parameter(Position = 0, ParameterSetName = "FilterByReleaseVersion")]
+        [Parameter(Position = 0)]
         [ValidateScript(
             {
                 $releaseVersionTest = [System.Text.RegularExpressions.Regex]::new("^(\d{1,}\.\d{1,})$").Match($PSItem)
@@ -14,17 +14,13 @@ function Get-PwshReleases {
             }
         )]
         [string]$FilterReleaseVersion,
-        [Parameter(Position = 1, ParameterSetName = "FilterByReleaseVersion")]
-        [Parameter(Position = 1, ParameterSetName = "FilterByReleaseTag")]
+        [Parameter(Position = 1)]
         [switch]$NoPreReleases,
-        [Parameter(Position = 2, ParameterSetName = "FilterByReleaseVersion")]
-        [Parameter(Position = 2, ParameterSetName = "FilterByReleaseTag")]
+        [Parameter(Position = 2)]
         [string]$FilterAssetsByPlatform,
-        [Parameter(Position = 3, ParameterSetName = "FilterByReleaseVersion")]
-        [Parameter(Position = 3, ParameterSetName = "FilterByReleaseTag")]
+        [Parameter(Position = 3)]
         [string]$FilterAssetsByArchitecture,
-        [Parameter(Position = 4, ParameterSetName = "FilterByReleaseVersion")]
-        [Parameter(Position = 4, ParameterSetName = "FilterByReleaseTag")]
+        [Parameter(Position = 4)]
         [string]$FilterAssetsByFileType
     )
 
