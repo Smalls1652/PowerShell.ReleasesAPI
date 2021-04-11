@@ -43,7 +43,23 @@ function Get-PwshReleases {
                 break
             }
         }
-        $webRequest = Invoke-WebRequest -Uri $apiUri -Method "Get" -Verbose:$false
+
+        try {
+            $webRequest = Invoke-WebRequest -Uri $apiUri -Method "Get" -Verbose:$false -ErrorAction "Stop"
+        }
+        catch {
+            $errorDetails = $PSItem.Exception
+
+            $PSCmdlet.ThrowTerminatingError(
+                [System.Management.Automation.ErrorRecord]::new(
+                    [System.Exception]::new("An error occurred while retrieving data from the GitHub API."),
+                    "GitHubApiCallError",
+                    [System.Management.Automation.ErrorCategory]::ConnectionError,
+                    $errorDetails
+                )
+            )
+        }
+
         $ProgressPreference = $currentProgressPreference
 
         $apiResponseData = $webRequest.Content | ConvertFrom-Json
